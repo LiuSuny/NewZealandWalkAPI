@@ -1,4 +1,4 @@
-namespace WorldWideWalk.API
+namespace NewZealandWalk.API
 {
     public class WeatherForecast
     {

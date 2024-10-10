@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WorldWideWalk.API.Controllers
+namespace NewZealandWalk.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
