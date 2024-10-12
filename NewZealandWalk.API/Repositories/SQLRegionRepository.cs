@@ -12,9 +12,43 @@ namespace NewZealandWalk.API.Repositories
             this.dbContext = dbContext;
         }
 
-        public async Task<List<Region>> GetAllAsync()
+        public async Task<List<Region>> GetAllAsync(string? filterOn = null, string? filterQuery = null,
+           string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
-            return await dbContext.Regions.ToListAsync();
+            var regions = dbContext.Regions.AsQueryable();
+            // Filtering
+
+
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Code", StringComparison.OrdinalIgnoreCase))
+                {
+                    regions = regions.Where(x => x.Code.Contains(filterQuery));
+                }
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    regions = regions.Where(x => x.Name.Contains(filterQuery));
+                }
+
+            }
+            // Sorting 
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+
+                if (sortBy.Equals("Code", StringComparison.OrdinalIgnoreCase))
+                {
+                    regions = isAscending ? regions.OrderBy(x => x.Name) : regions.OrderByDescending(x => x.Code);
+                }
+                else if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    regions = isAscending ? regions.OrderBy(x => x.Name) : regions.OrderByDescending(x => x.Name);
+                }
+            }
+            // Pagination
+            var skipResults = (pageNumber - 1) * pageSize;
+            return await regions.Skip(skipResults).Take(pageSize).ToListAsync();
+
+            //return await dbContext.Regions.ToListAsync();
         }
         public async Task<Region?> GetByIdAsync(Guid id)
         {
