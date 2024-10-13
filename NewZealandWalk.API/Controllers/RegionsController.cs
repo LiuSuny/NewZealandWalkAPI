@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewZealandWalk.API.CustomActionFilters;
 using NewZealandWalk.API.Models.Domain;
@@ -9,6 +10,7 @@ namespace NewZealandWalk.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class RegionsController : ControllerBase
     {
 
@@ -24,6 +26,7 @@ namespace NewZealandWalk.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
@@ -52,6 +55,7 @@ namespace NewZealandWalk.API.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader")]
         //[Authorize(Roles = "Reader")]
         public async Task<ActionResult> GetById([FromRoute] Guid id)
         {
@@ -74,6 +78,7 @@ namespace NewZealandWalk.API.Controllers
         // POST To Create New Region
         // POST: https://localhost:portnumber/api/regions
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         //[ValidateModel] //this attribute do the same like the modelState.IsValid
         public async Task<ActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
@@ -106,6 +111,7 @@ namespace NewZealandWalk.API.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         //[ValidateModel]
+        [Authorize(Roles = "Writer")]
         public async Task<ActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             if (ModelState.IsValid)
@@ -134,6 +140,7 @@ namespace NewZealandWalk.API.Controllers
         // DELETE: https://localhost:portnumber/api/regions/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer,Reader")]
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
             var regionDomainModel = await repository.DeleteAsync(id);
