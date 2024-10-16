@@ -17,16 +17,17 @@ namespace NewZealandWalk.API.Controllers
         // private readonly NewZealandWalksDbContext dbContext;
         private readonly IRegionRepository repository;
         private readonly IMapper mapper;
-
-        public RegionsController(IRegionRepository repository, IMapper mapper)
+        private readonly ILogger<RegionsController> logger;
+        public RegionsController(IRegionRepository repository, IMapper mapper, ILogger<RegionsController> logger)
         {
 
             this.repository = repository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Reader")]
+        //[Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
@@ -55,7 +56,7 @@ namespace NewZealandWalk.API.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Reader")]
+        //[Authorize(Roles = "Reader")]
         //[Authorize(Roles = "Reader")]
         public async Task<ActionResult> GetById([FromRoute] Guid id)
         {
@@ -111,7 +112,7 @@ namespace NewZealandWalk.API.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         //[ValidateModel]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         public async Task<ActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
             if (ModelState.IsValid)
@@ -140,7 +141,7 @@ namespace NewZealandWalk.API.Controllers
         // DELETE: https://localhost:portnumber/api/regions/{id}
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Writer,Reader")]
+       // [Authorize(Roles = "Writer,Reader")]
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
             var regionDomainModel = await repository.DeleteAsync(id);

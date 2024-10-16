@@ -14,10 +14,12 @@ namespace NewZealandWalk.API.Controllers
 
         private readonly IMapper mapper;
         private readonly IWalkRepository walkRepository;
-        public WalksController(IMapper mapper, IWalkRepository walkRepository)
+        private readonly ILogger<RegionsController> logger;
+        public WalksController(IMapper mapper, IWalkRepository walkRepository, ILogger<RegionsController> logger)
         {
             this.mapper = mapper;
             this.walkRepository = walkRepository;
+            this.logger = logger;
         }
         // CREATE Walk
         // POST: /api/walks
@@ -46,11 +48,18 @@ namespace NewZealandWalk.API.Controllers
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
         {
             //var walksDomainModel = await walkRepository.GetAllAsync();
+            
+
             var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy,
-               isAscending ?? true, pageNumber, pageSize);
+                   isAscending ?? true, pageNumber, pageSize);
+
+            // Create an exception
+            //throw new Exception("This is a new exception");
+
             // Map Domain Model to DTO
             return Ok(mapper.Map<List<WalkDto>>(walksDomainModel));
         }
+
         // Get Walk By Id
         // GET: /api/Walks/{id}
         [HttpGet]
