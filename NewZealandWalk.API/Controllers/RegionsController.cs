@@ -79,7 +79,7 @@ namespace NewZealandWalk.API.Controllers
         // POST To Create New Region
         // POST: https://localhost:portnumber/api/regions
         [HttpPost]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
         //[ValidateModel] //this attribute do the same like the modelState.IsValid
         public async Task<ActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
